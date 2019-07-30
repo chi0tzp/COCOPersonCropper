@@ -18,5 +18,5 @@ class BaseTransform:
         self.size = size
         self.mean = np.array(mean, dtype=np.float32)
 
-    def __call__(self, img, boxes=None, labels=None):
-        return base_transform(img, self.size, self.mean), boxes, labels
+    def __call__(self, img, keypoints=None):
+        return base_transform(img, self.size, self.mean), keypoints

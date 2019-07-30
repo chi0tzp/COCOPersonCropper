@@ -1,6 +1,6 @@
-classes_coco = ('person', 'nose', 'LeftEye', 'RightEye', 'LeftEar', 'RightEar', 'LeftShoulder', 'RightShoulder',
-                'LeftElbow', 'RightElbow', 'LeftWrist', 'RightWrist', 'LeftHip', 'RightHip', 'LeftKnee', 'RightKnee',
-                'LeftAnkle', 'RightAnkle')
+classes_coco = ('nose', 'LeftEye', 'RightEye', 'LeftEar', 'RightEar', 'LeftShoulder', 'RightShoulder', 'LeftElbow',
+                'RightElbow', 'LeftWrist', 'RightWrist', 'LeftHip', 'RightHip', 'LeftKnee', 'RightKnee', 'LeftAnkle',
+                'RightAnkle')
 
 coco_kpts_mirror_map = {
     2: 3,    # 'left_eye' <--> 'right_eye'
@@ -18,5 +18,6 @@ cfg_coco = {
     'classes': classes_coco,
     'kpts_mirror_map': coco_kpts_mirror_map,
     'inp_dim': 300,
-    'means': (107, 114, 118),
+    # 'means': (107, 114, 118),
+    'means': (0, 0, 0),
 }
