@@ -1,5 +1,5 @@
 from .coco import COCOPerson, COCOAnnotationTransform
-from .augmentations import Augmentor
+from .augmentations import PersonAugmentor
 from .collation import detection_collate
 from .config import *
 import numpy as np

@@ -175,9 +175,8 @@ class COCOPerson(data.Dataset):
         img = cv2.imread(osp.join(self.root, path))
         img_h, img_w, _ = img.shape
 
-        # TODO: add comment
         persons = self.target_transform(target)
-
+        # TODO: change hardcoded dimension (300)
         persons_ndarray = np.zeros((len(persons), 3, 300, 300))
         keypoints_list = []
         person_cnt = 0
@@ -201,16 +200,6 @@ class COCOPerson(data.Dataset):
             persons_tensor = torch.Tensor()
             persons_keypoints = []
         return persons_tensor, persons_keypoints
-
-            # target = np.array(target)
-        # if self.transform is not None:
-        #     img, boxes, labels = self.transform(img=img, boxes=target[:, :4], labels=target[:, -1])
-        # else:
-        #     boxes, labels = target[:, :4], target[:, -1]
-        # bbox_target = np.hstack((boxes, np.expand_dims(labels, axis=1)))
-        # return torch.from_numpy(img).permute(2, 0, 1), bbox_target, img_h, img_w, img_id, path
-
-        # return torch.from_numpy(persons_ndarray).permute(2, 0, 1), keypoints_list, img_h, img_w, img_id, path
 
     def pull_image(self, index):
         """ Returns the original image object at index in PIL form

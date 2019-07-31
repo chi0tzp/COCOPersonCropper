@@ -1,7 +1,6 @@
 import sys
 import argparse
 from data import *
-import torch
 import torch.utils.data as data
 import numpy as np
 import cv2
@@ -17,19 +16,18 @@ def main():
                         help="chose dataset's split (training/testing)")
     parser.add_argument("--batch_size", type=int, default=4, help='set batch size')
     parser.add_argument("--dim", type=int, choices=(300, 512), default=300, help="set input dimension")
+    parser.add_argument('-a', '--augment', action='store_true', help="add augmentations (see data/augmentations.py)")
     args = parser.parse_args()
 
     cfg = cfg_coco
     cfg['inp_dim'] = args.dim
 
-    # Load COCO dataset for human pose estimation
-    # dataset = COCOPerson(root=args.dataset_root, year=2017, split=args.split, cfg=cfg,
-    #                      transform=Augmentor(size=cfg['inp_dim'],
-    #                                          mean=cfg['means'],
-    #                                          kpts_mirror_map=cfg['kpts_mirror_map']))
-
-    dataset = COCOPerson(root=args.dataset_root, year=args.year, split=args.split, cfg=cfg,
-                         transform=BaseTransform(size=cfg['inp_dim'], mean=cfg['means']))
+    # Load COCO dataset for human pose estimation (cropped persons with boby keypoints)
+    if args.augment:
+        transform = PersonAugmentor(size=cfg['inp_dim'], mean=cfg['means'])
+    else:
+        transform = BaseTransform(size=cfg['inp_dim'], mean=(0, 0, 0))
+    dataset = COCOPerson(root=args.dataset_root, year=args.year, split=args.split, cfg=cfg, transform=transform)
 
     # Build data loader
     data_loader = data.DataLoader(dataset, args.batch_size, num_workers=1, shuffle=True, collate_fn=detection_collate,

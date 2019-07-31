@@ -9,6 +9,5 @@ def detection_collate(batch):
             person_imgs.append(sample[0])
         if len(sample[1]) != 0:
             keypoint_lists += sample[1]
-        # targets.append(torch.FloatTensor(sample[1]))
 
     return torch.cat(person_imgs, 0), keypoint_lists
