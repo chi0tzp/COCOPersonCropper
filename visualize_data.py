@@ -1,4 +1,3 @@
-import sys
 import argparse
 from data import *
 import torch.utils.data as data
@@ -27,7 +26,7 @@ def main():
         transform = PersonAugmentor(size=cfg['inp_dim'], mean=cfg['means'])
     else:
         transform = BaseTransform(size=cfg['inp_dim'], mean=(0, 0, 0))
-    dataset = COCOPerson(root=args.dataset_root, year=args.year, split=args.split, cfg=cfg, transform=transform)
+    dataset = COCOPerson(root=args.dataset_root, year=args.year, split=args.split, dim=cfg['inp_dim'], transform=transform)
 
     # Build data loader
     data_loader = data.DataLoader(dataset, args.batch_size, num_workers=1, shuffle=True, collate_fn=detection_collate,
