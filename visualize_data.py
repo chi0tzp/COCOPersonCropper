@@ -1,3 +1,4 @@
+import sys
 import argparse
 from data import *
 import torch.utils.data as data
@@ -39,6 +40,15 @@ def main():
     #   keypoints (list)       : list of length equal to num_persons
     images, keypoints = next(batch_iterator)
 
+    if args.verbose:
+        print("# Found {} persons in {} images".format(len(keypoints), args.batch_size))
+
+    # If number of persons are more than batch_size, sample randomly from them
+    if len(keypoints) > args.batch_size:
+        I = np.random.randint(low=0, high=len(keypoints), size=args.batch_size)
+        images = images[I]
+        keypoints = [keypoints[i] for i in I]
+
     for i in range(len(keypoints)):
 
         if args.verbose:
@@ -57,7 +67,7 @@ def main():
             # Draw keypoint
             cv2.circle(img=img, center=(k_x, k_y), radius=2, color=(255, 0, 255), thickness=2)
             cv2.circle(img=img, center=(k_x, k_y), radius=4, color=(0, 255, 255), thickness=2)
-
+            
             # Show image
             cv2.imshow("Person: {}".format(i), img)
             cv2.waitKey()
