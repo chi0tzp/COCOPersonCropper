@@ -1,6 +1,6 @@
 # COCOPersonCropper
 
-A PyTorch data loader class for on-the-fly cropping persons from COCO dataset, along with their body-landmarks annotations.
+A PyTorch data loader class for on-the-fly cropping persons from [COCO dataset](http://cocodataset.org/#home), along with their body-landmarks annotations.
 
 **Requirements**
 
