@@ -1,4 +1,3 @@
-import sys
 import argparse
 from data import *
 import torch.utils.data as data
@@ -8,7 +7,7 @@ import cv2
 
 def main():
     # Set up a parser for command line arguments
-    parser = argparse.ArgumentParser("")
+    parser = argparse.ArgumentParser("COCOPersonCropper visualization tool")
     parser.add_argument('-v', '--verbose', action='store_true', help="increase output verbosity")
     parser.add_argument("--dataset_root", type=str, required=True, help="set dataset root directory")
     parser.add_argument("--year", type=int, default=2017, choices=(2014, 2017), help="set COCO dataset year")
@@ -19,15 +18,17 @@ def main():
     parser.add_argument('-a', '--augment', action='store_true', help="add augmentations (see data/augmentations.py)")
     args = parser.parse_args()
 
-    cfg = cfg_coco
-    cfg['inp_dim'] = args.dim
+    # COCO keypoint classes (body landmarks)
+    keypoint_classes = ('nose', 'LeftEye', 'RightEye', 'LeftEar', 'RightEar', 'LeftShoulder', 'RightShoulder',
+                        'LeftElbow', 'RightElbow', 'LeftWrist', 'RightWrist', 'LeftHip', 'RightHip', 'LeftKnee',
+                        'RightKnee', 'LeftAnkle', 'RightAnkle')
 
     # Load COCO dataset for human pose estimation (cropped persons with boby keypoints)
     if args.augment:
-        transform = PersonAugmentor(size=cfg['inp_dim'], mean=cfg['means'])
+        transform = PersonAugmentor(size=args.dim, mean=(107, 114, 118))
     else:
-        transform = BaseTransform(size=cfg['inp_dim'], mean=(0, 0, 0))
-    dataset = COCOPerson(root=args.dataset_root, year=args.year, split=args.split, dim=cfg['inp_dim'], transform=transform)
+        transform = BaseTransform(size=args.dim, mean=(0, 0, 0))
+    dataset = COCOPerson(root=args.dataset_root, year=args.year, split=args.split, dim=args.dim, transform=transform)
 
     # Build data loader
     data_loader = data.DataLoader(dataset, args.batch_size, num_workers=1, shuffle=True, collate_fn=detection_collate,
@@ -57,12 +58,12 @@ def main():
 
         img = images[i].numpy().transpose(1, 2, 0).astype(np.uint8).copy()
         for k in keypoints[i]:
-            k_x = int(cfg['inp_dim'] * k[0])
-            k_y = int(cfg['inp_dim'] * k[1])
+            k_x = int(args.dim * k[0])
+            k_y = int(args.dim * k[1])
             k_label = k[2]
 
             if args.verbose:
-                print("\t{}: ({}, {})".format(classes_coco[k_label], k_x, k_y))
+                print("\t{}: ({}, {})".format(keypoint_classes[k_label], k_x, k_y))
 
             # Draw keypoint
             cv2.circle(img=img, center=(k_x, k_y), radius=2, color=(255, 0, 255), thickness=2)

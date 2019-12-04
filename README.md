@@ -2,7 +2,11 @@
 
 A PyTorch data loader class for on-the-fly cropping persons from COCO dataset, along with their body-landmarks annotations.
 
+**Requirements**
 
+- pytorch (version > 1.0)
+- opencv
+- [cocoapi](https://github.com/cocodataset/cocoapi)
 
 An auxiliary visualization script is `visualize_data.py`, which can be run with various options (dataset split, dataset year version, cropped image dimensions, with/without augmentations) as shown below:
 
